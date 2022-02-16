@@ -1,0 +1,61 @@
+name: Test and Verify Source Code
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-requirements:
+    name: Check minimum system requirements from README
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        include:
+          - cxx: g++-9
+            cc: gcc-9
+          - cxx: clang++-9
+            cc: clang-9
+    env:
+      CC: ${{matrix.cc}}
+      CXX: ${{matrix.cxx}}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@master
+        with:
+          cmake-version: 3.12
+      - name: Setup Ninja build tool
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.4.0
+          dest: /home/runner/.local/bin
+      # A compiler is already installed; it was chosen in jobs.*.env.
+      - name: Configure the project
+        run: mkdir build && cd build && cmake -G Ninja ..
+      - name: Try to build the project
+        run: cmake --build build
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup Ninja build tool
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          dest: /home/runner/.local/bin
+      - name: Configure the project
+        run: mkdir build && cd build && cmake -G Ninja ..
+      - name: Build the project
+        run: cmake --build build --config Debug
+      - name: Test the project
+        run: ctest --build-config Debug
+        working-directory: build
+        env:
+          CTEST_PARALLEL_LEVEL: 3
