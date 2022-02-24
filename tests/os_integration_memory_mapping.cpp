@@ -1,4 +1,4 @@
-/** hello.cpp - a suit to test if GTest works
+/** os_integration_memory_mapping.cpp - unit tests for memory_mapping class
  *
  * Copyright (c) 2022 Oleg Iarygin <oleg@arhadthedev.net>
  *
@@ -9,5 +9,9 @@
 #include <gtest/gtest.h>
 
 TEST(harness, hello) {
+	EXPECT_TRUE(true);
+}
+
+TEST(OsIntegrationMemoryMapping, Hello) {
 	EXPECT_TRUE(true);
 }

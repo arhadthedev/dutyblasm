@@ -8,7 +8,7 @@
 find_package(GTest CONFIG REQUIRED)
 include(GoogleTest)
 
-add_executable(unittest hello.cpp)
+add_executable(unittest os_integration_memory_mapping.cpp)
 target_compile_features(unittest PRIVATE cxx_std_20)
 target_link_libraries(unittest PRIVATE dutyblasm GTest::gtest GTest::gtest_main)
 gtest_discover_tests(unittest WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")

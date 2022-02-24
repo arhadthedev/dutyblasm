@@ -38,24 +38,41 @@ jobs:
       - name: Try to build the project
         run: cmake --build build
 
+  test-os-integration:
+    name: Run tests of OS integration
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Configure the project
+        run: mkdir build && cd build && cmake ..
+      - name: Build the project
+        run: cmake --build build --config Debug
+      - name: Test the project
+        run: ctest --build-config Debug -R OsIntegration.*
+        working-directory: build
+        env:
+          CTEST_PARALLEL_LEVEL: 3
+
   test:
-    name: Run tests
+    name: Run tests of crossplatform components
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Setup Ninja build tool
-        uses: ashutoshvarma/setup-ninja@master
-        with:
-          dest: /home/runner/.local/bin
       - name: Configure the project
-        run: mkdir build && cd build && cmake -G Ninja ..
+        run: mkdir build && cd build && cmake ..
       - name: Build the project
         run: cmake --build build --config Debug
       - name: Test the project
-        run: ctest --build-config Debug
+        run: ctest --build-config Debug -E OsIntegration.*
         working-directory: build
         env:
           CTEST_PARALLEL_LEVEL: 3
