@@ -15,6 +15,13 @@ set(CMAKE_TOOLCHAIN_FILE vcpkg/scripts/buildsystems/vcpkg.cmake CACHE FILEPATH
 
 project(dutyblasm VERSION 0.0.1)
 
+add_library(dutyblasm STATIC src/os_integration.cpp)
+target_include_directories(dutyblasm PUBLIC include)
+if(WIN32)
+    target_link_libraries(dutyblasm ntdll)
+endif()
+target_compile_features(dutyblasm PUBLIC cxx_std_20)
+
 include(CTest)
 if(BUILD_TESTING)
     add_subdirectory(tests)

@@ -10,5 +10,5 @@ include(GoogleTest)
 
 add_executable(unittest hello.cpp)
 target_compile_features(unittest PRIVATE cxx_std_20)
-target_link_libraries(unittest PRIVATE GTest::gtest GTest::gtest_main)
+target_link_libraries(unittest PRIVATE dutyblasm GTest::gtest GTest::gtest_main)
 gtest_discover_tests(unittest WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
